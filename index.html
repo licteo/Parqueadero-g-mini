@@ -3,52 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Parqueadero PRO - Multi-día</title>
+    <title>Control Parqueadero PRO</title>
+    
+    <link rel="icon" type="image/png" href="icono.png">
+    <link rel="apple-touch-icon" href="icono.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
     <style>
+        /* (Mantiene todo el estilo anterior que ya funcionaba bien) */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #f4f7f9; padding: 15px; color: #333; }
         .container { max-width: 750px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        
         h1 { text-align: center; margin-bottom: 20px; color: #2c3e50; }
         #tituloReporte { display: none; text-align: center; text-transform: uppercase; margin-bottom: 15px; font-size: 18px; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 5px; }
-
         .form-card { background: #fff; padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 20px; }
         .form-group { margin-bottom: 12px; position: relative; }
         label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85rem; color: #555; }
         input, select { width: 100%; padding: 12px; padding-right: 50px; border: 1px solid #ccd6dd; border-radius: 8px; font-size: 1rem; outline: none; }
-        
         .btn-voice { position: absolute; right: 6px; top: 28px; background: #ebf5fb; border: 1px solid #3498db; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 1.2rem; }
         .btn-voice.listening { background: #e74c3c; color: white; animation: pulse 1s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
         .form-row { display: flex; gap: 10px; }
         .form-row .form-group { flex: 1; }
         #btnRegistrar { width: 100%; padding: 14px; background: #3498db; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; }
-
         .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; margin-bottom: 10px; }
         .filter-btn { padding: 8px 16px; border: 1px solid #3498db; background: white; color: #3498db; border-radius: 20px; white-space: nowrap; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
         .filter-btn.active { background: #3498db; color: white; }
-        
         .tool-bar { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; }
-        .btn-tool { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-align: center; text-decoration: none; }
-
-        /* TABLA TÉCNICA */
+        .btn-tool { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
         th { background: #f8f9fa; font-size: 9px; font-weight: bold; border: 1px solid #333; padding: 6px 2px; }
         td { border: 1px solid #333; padding: 8px 4px; text-align: center; font-size: 10px; word-wrap: break-word; }
-        
         .w-prop { width: 18%; text-align: left !important; }
         .w-placa { width: 16%; font-weight: bold; }
         .w-asist { width: 7%; }
-        .w-ent { width: 15%; } /* Un poco más ancho para la fecha */
+        .w-ent { width: 15%; }
         .w-sal { width: 10%; }
         .w-obs { width: 22%; text-align: left !important; }
         .w-est { width: 12%; }
-
         .btn-delete-row { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.1rem; }
-
         @media print {
-            .form-card, .filter-bar, .tool-bar, h1, .mobile-hide, .btn-voice, .btn-delete-row { display: none !important; }
+            .form-card, .filter-bar, .tool-bar, h1, .btn-voice, .btn-delete-row { display: none !important; }
             #tituloReporte { display: block !important; }
             .container { max-width: 100%; width: 100%; border: none; padding: 0; }
             table { border: 2px solid #000; width: 100% !important; }
@@ -57,57 +53,27 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>🅿️ Control Parqueadero</h1>
         <div id="tituloReporte">REPORTE GENERAL</div>
-
         <section class="form-card">
-            <div class="form-group">
-                <label>Propietario / Responsable</label>
-                <input type="text" id="propietario" placeholder="Ej: Miguel">
-                <button class="btn-voice" onclick="activarVoz('propietario')">🎤</button>
-            </div>
-            <div class="form-group">
-                <label>Placa</label>
-                <input type="text" id="placa" placeholder="ABC-123" style="text-transform:uppercase">
-                <button class="btn-voice" onclick="activarVoz('placa')">🎤</button>
-            </div>
-            
+            <div class="form-group"><label>Propietario</label><input type="text" id="propietario"><button class="btn-voice" onclick="activarVoz('propietario')">🎤</button></div>
+            <div class="form-group"><label>Placa</label><input type="text" id="placa" style="text-transform:uppercase"><button class="btn-voice" onclick="activarVoz('placa')">🎤</button></div>
             <div class="form-row">
-                <div class="form-group">
-                    <label>Categoría</label>
-                    <select id="categoria">
-                        <option value="Moto Diario">Moto Diario</option>
-                        <option value="Moto Mensual">Moto Mensual</option>
-                        <option value="Buseta">Buseta</option>
-                        <option value="Particular">Particular</option>
-                        <option value="Plásticos">Plásticos</option>
-                        <option value="Pintores">Pintores</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Estado</label>
-                    <select id="estado">
-                        <option value="Pendiente">Pendiente ⏳</option>
-                        <option value="Pagado">Pagado ✅</option>
-                    </select>
-                </div>
+                <div class="form-group"><label>Categoría</label><select id="categoria">
+                    <option value="Moto Diario">Moto Diario</option><option value="Moto Mensual">Moto Mensual</option>
+                    <option value="Buseta">Buseta</option><option value="Particular">Particular</option>
+                    <option value="Plásticos">Plásticos</option><option value="Pintores">Pintores</option>
+                </select></div>
+                <div class="form-group"><label>Estado</label><select id="estado"><option value="Pendiente">Pendiente ⏳</option><option value="Pagado">Pagado ✅</option></select></div>
             </div>
-            
-            <div class="form-group">
-                <label>Observaciones / Cobro</label>
-                <input type="text" id="observaciones" placeholder="Diga el monto o nota">
-                <button class="btn-voice" onclick="activarVoz('observaciones', true)">🎤</button>
-            </div>
+            <div class="form-group"><label>Observaciones / Cobro</label><input type="text" id="observaciones"><button class="btn-voice" onclick="activarVoz('observaciones', true)">🎤</button></div>
             <button id="btnRegistrar" onclick="registrarVehiculo()">Registrar Entrada</button>
         </section>
-
         <div class="tool-bar">
-            <button onclick="window.print()" class="btn-tool" style="background:#2ecc71; color:white;">🖨️ Imprimir Reporte</button>
+            <button onclick="window.print()" class="btn-tool" style="background:#2ecc71; color:white;">🖨️ Imprimir</button>
             <button onclick="borrarTodo()" class="btn-tool" style="background:#95a5a6; color:white;">🧹 Limpiar Todo</button>
         </div>
-
         <div class="filter-bar">
             <button class="filter-btn active" onclick="filtrar('Todas')">Todas</button>
             <button class="filter-btn" onclick="filtrar('Moto')">Motos</button>
@@ -116,119 +82,51 @@
             <button class="filter-btn" onclick="filtrar('Plásticos')">Plásticos</button>
             <button class="filter-btn" onclick="filtrar('Pintores')">Pintores</button>
         </div>
-
         <table>
-            <thead>
-                <tr>
-                    <th class="w-prop">PROPIETARIO</th>
-                    <th class="w-placa">PLACA</th>
-                    <th class="w-asist">ASIST.</th>
-                    <th class="w-ent">ENTRADA</th>
-                    <th class="w-sal">SALIDA</th>
-                    <th class="w-obs">OBSERVACIONES</th>
-                    <th class="w-est">ESTADO</th>
-                </tr>
-            </thead>
+            <thead><tr><th class="w-prop">PROPIETARIO</th><th class="w-placa">PLACA</th><th class="w-asist">ASIST.</th><th class="w-ent">ENTRADA</th><th class="w-sal">SALIDA</th><th class="w-obs">OBSERVACIONES</th><th class="w-est">ESTADO</th></tr></thead>
             <tbody id="cuerpoTabla"></tbody>
         </table>
     </div>
-
     <script>
         let registros = JSON.parse(localStorage.getItem('parqueadero_db')) || [];
         let filtroActual = "Todas";
-
-        function activarVoz(idCampo, esPrecio = false) {
+        function activarVoz(id, esPrecio = false) {
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'es-ES';
-            const boton = event.currentTarget;
-
-            recognition.onstart = () => boton.classList.add('listening');
-            recognition.onend = () => boton.classList.remove('listening');
-
             recognition.onresult = (e) => {
                 let texto = e.results[0][0].transcript.toLowerCase();
                 if (esPrecio) {
                     texto = texto.replace(/ mil/g, '000').replace(/mil/g, '000').replace(/[^0-9]/g, '');
                     if (texto.length > 0) texto = parseInt(texto).toLocaleString('de-DE');
                 }
-                document.getElementById(idCampo).value = texto.toUpperCase();
+                document.getElementById(id).value = texto.toUpperCase();
             };
             recognition.start();
         }
-
         function registrarVehiculo() {
             const placa = document.getElementById('placa').value.trim();
-            if(!placa) return alert("Ingrese una placa");
-            
-            // NUEVO: Captura fecha y hora completa para registros de varios días
+            if(!placa) return alert("Ingrese placa");
             const ahora = new Date();
-            const fechaFormateada = ahora.toLocaleDateString([], {day:'2-digit', month:'2-digit'}) + " " + ahora.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
-
-            const nuevo = {
-                id: Date.now(),
-                propietario: document.getElementById('propietario').value || "---",
-                placa: placa.toUpperCase(),
-                categoria: document.getElementById('categoria').value,
-                estado: document.getElementById('estado').value,
-                observaciones: document.getElementById('observaciones').value || "---",
-                entrada: fechaFormateada 
-            };
-            
-            registros.unshift(nuevo);
+            const fecha = ahora.toLocaleDateString([], {day:'2-digit', month:'2-digit'}) + " " + ahora.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
+            registros.unshift({ id: Date.now(), propietario: document.getElementById('propietario').value || "---", placa: placa.toUpperCase(), categoria: document.getElementById('categoria').value, estado: document.getElementById('estado').value, observaciones: document.getElementById('observaciones').value || "---", entrada: fecha });
             localStorage.setItem('parqueadero_db', JSON.stringify(registros));
-            
-            // Limpiar campos
-            document.getElementById('placa').value = "";
-            document.getElementById('propietario').value = "";
-            document.getElementById('observaciones').value = "";
+            document.getElementById('placa').value = ""; document.getElementById('propietario').value = ""; document.getElementById('observaciones').value = "";
             renderizar();
         }
-
-        function filtrar(cat) {
-            filtroActual = cat;
+        function filtrar(cat) { 
+            filtroActual = cat; 
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('tituloReporte').innerText = cat === "Todas" ? "REPORTE GENERAL" : `REPORTE DE ${cat.toUpperCase()}`;
-            renderizar();
+            renderizar(); 
         }
-
-        function darSalida(id) {
-            if(confirm("¿Confirmar salida de este vehículo? Se borrará de la lista.")) {
-                registros = registros.filter(r => r.id !== id);
-                localStorage.setItem('parqueadero_db', JSON.stringify(registros));
-                renderizar();
-            }
-        }
-
-        function borrarTodo() {
-            if(confirm("¿Seguro que desea borrar TODA la lista?")) {
-                registros = [];
-                localStorage.setItem('parqueadero_db', JSON.stringify(registros));
-                renderizar();
-            }
-        }
-
+        function darSalida(id) { if(confirm("¿Dar salida?")) { registros = registros.filter(r => r.id !== id); localStorage.setItem('parqueadero_db', JSON.stringify(registros)); renderizar(); } }
+        function borrarTodo() { if(confirm("¿Borrar todo?")) { registros = []; localStorage.setItem('parqueadero_db', JSON.stringify(registros)); renderizar(); } }
         function renderizar() {
-            const cuerpo = document.getElementById('cuerpoTabla');
-            cuerpo.innerHTML = "";
+            const cuerpo = document.getElementById('cuerpoTabla'); cuerpo.innerHTML = "";
             const filtrados = registros.filter(r => filtroActual === "Todas" || r.categoria.includes(filtroActual));
-
             filtrados.forEach(reg => {
-                const colorEst = reg.estado.includes('Pagado') ? 'green' : 'red';
-                cuerpo.innerHTML += `
-                    <tr>
-                        <td class="w-prop">${reg.propietario}</td>
-                        <td class="w-placa">${reg.placa}</td>
-                        <td class="w-asist"></td>
-                        <td class="w-ent">${reg.entrada}</td>
-                        <td class="w-sal"></td>
-                        <td class="w-obs">${reg.observaciones}</td>
-                        <td class="w-est">
-                            <span style="color:${colorEst}">${reg.estado.split(' ')[0]}</span>
-                            <button class="btn-delete-row" onclick="darSalida(${reg.id})">🗑️</button>
-                        </td>
-                    </tr>
-                `;
+                cuerpo.innerHTML += `<tr><td class="w-prop">${reg.propietario}</td><td class="w-placa">${reg.placa}</td><td class="w-asist"></td><td class="w-ent">${reg.entrada}</td><td class="w-sal"></td><td class="w-obs">${reg.observaciones}</td><td class="w-est"><span style="color:${reg.estado.includes('Pagado')?'green':'red'}">${reg.estado.split(' ')[0]}</span> <button class="btn-delete-row" onclick="darSalida(${reg.id})">🗑️</button></td></tr>`;
             });
         }
         renderizar();
