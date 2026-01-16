@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Parqueadero PRO - Estado Interactivo</title>
+    <title>Control Parqueadero PRO - Orden Alfabético</title>
     
     <link rel="icon" type="image/png" href="icono.png">
     <link rel="apple-touch-icon" href="icono.png">
@@ -121,8 +121,8 @@
         </section>
 
         <div class="tool-bar">
-            <button onclick="window.print()" class="btn-tool" style="background:#2ecc71; color:white;">🖨️ Reporte</button>
-            <button onclick="borrarTodo()" class="btn-tool" style="background:#95a5a6; color:white;">🧹 Limpiar</button>
+            <button onclick="window.print()" class="btn-tool" style="background:#2ecc71; color:white;">🖨️ Imprimir PDF</button>
+            <button onclick="borrarTodo()" class="btn-tool" style="background:#95a5a6; color:white;">🧹 Limpiar Lista</button>
         </div>
 
         <div class="filter-bar">
@@ -204,7 +204,7 @@
 
             const fechaTxt = fechaEntrada.toLocaleDateString([], {day:'2-digit', month:'2-digit'}) + " " + fechaEntrada.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
 
-            registros.unshift({
+            registros.push({
                 id: Date.now(),
                 placa: placa,
                 foto: fotoTemp,
@@ -213,7 +213,7 @@
                 observaciones: document.getElementById('observaciones').value || "---",
                 entrada: fechaTxt,
                 entradaRaw: fechaEntrada.getTime(),
-                estado: document.getElementById('estadoRegistro').value // CAPTURA EL ESTADO ELEGIDO
+                estado: document.getElementById('estadoRegistro').value
             });
 
             localStorage.setItem('parqueadero_db', JSON.stringify(registros));
@@ -268,7 +268,12 @@
         function renderizar() {
             const cuerpo = document.getElementById('cuerpoTabla');
             cuerpo.innerHTML = "";
-            const filtrados = registros.filter(r => filtroActual === "Todas" || r.categoria.includes(filtroActual));
+            
+            // FILTRAR PRIMERO
+            let filtrados = registros.filter(r => filtroActual === "Todas" || r.categoria.includes(filtroActual));
+
+            // --- ESTE ES EL CAMBIO PARA ORDEN ALFABÉTICO ---
+            filtrados.sort((a, b) => a.placa.localeCompare(b.placa));
 
             filtrados.forEach(reg => {
                 const dias = calcularDias(reg.entradaRaw);
